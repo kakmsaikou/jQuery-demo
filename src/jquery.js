@@ -215,10 +215,26 @@ jQuery.fn = jQuery.prototype = {
   },
 
   // 添加fn
-  on(eventName, fn) {
-    this.each((el) => {
-      el.addEventListener(eventName, fn);
-    });
+  on(eventName, fn, selector) {
+    if (arguments.length === 2) {
+      this.each((el) => {
+        el.addEventListener(eventName, fn);
+      });
+    } else if (arguments.length === 3) {
+      this.each((el) => {
+        el.addEventListener(eventName, (e) => {
+          let t = e.target;
+          while (!t.matches(selector)) {
+            if (el === t) {
+              t = null;
+              break;
+            }
+            t = t.parentNode;
+          }
+          t && fn.call(t, e, t);
+        });
+      });
+    }
   },
 
   // 删除fn

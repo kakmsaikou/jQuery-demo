@@ -11419,10 +11419,26 @@ jQuery.fn = jQuery.prototype = (_jQuery$prototype = {
   this.each(function (el) {
     el.classList.add(className);
   });
-}), _defineProperty(_jQuery$prototype, "on", function on(eventName, fn) {
-  this.each(function (el) {
-    el.addEventListener(eventName, fn);
-  });
+}), _defineProperty(_jQuery$prototype, "on", function on(eventName, fn, selector) {
+  if (arguments.length === 2) {
+    this.each(function (el) {
+      el.addEventListener(eventName, fn);
+    });
+  } else if (arguments.length === 3) {
+    this.each(function (el) {
+      el.addEventListener(eventName, function (e) {
+        var t = e.target;
+        while (!t.matches(selector)) {
+          if (el === t) {
+            t = null;
+            break;
+          }
+          t = t.parentNode;
+        }
+        t && fn.call(t, e, t);
+      });
+    });
+  }
 }), _defineProperty(_jQuery$prototype, "off", function off(eventName, fn) {
   this.each(function (el) {
     console.log(fn.name);
@@ -11458,7 +11474,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '56489' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '54986' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
